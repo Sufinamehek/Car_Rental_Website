@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="login-bg">
+    <div class="login-card shadow-lg">
+
+        <h4 class="text-center mb-3 fw-bold">CAR RENTAL APP</h4>
+
+        <h5 class="text-center text-primary">Login</h5>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p class="text-danger text-center">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+           <div class="input-group mb-3">
+    <span class="input-group-text">
+        <i class="bi bi-person"></i>
+    </span>
+    <input type="text" name="username" class="form-control" placeholder="Username" required>
+</div>
+
+
+            <div class="input-group mb-3">
+                <span class="input-group-text">
+                    <i class="bi bi-lock"></i>
+                </span>
+                <input type="password" name="password" class="form-control" placeholder="Password" required>
+            </div>
+
+            <button class="btn btn-primary w-100">Login</button>
+        </form>
+
+        <p class="text-center mt-3">
+            Don’t have an account?
+            <a href="{% url 'signup' %}">Sign Up</a>
+        </p>
+
+    </div>
+</div>
+
+{% endblock %}

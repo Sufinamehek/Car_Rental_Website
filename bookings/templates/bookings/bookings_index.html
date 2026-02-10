@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Your Bookings</h2>
+
+    {% if bookings %}
+        <div class="row g-4">
+        {% for booking in bookings %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body">
+                        <!-- Car Info -->
+                        <h5 class="card-title">{{ booking.car.name }}</h5>
+                        <p class="card-text">
+                            <strong>Dates:</strong> {{ booking.start_date }} – {{ booking.end_date }}<br>
+                            <strong>Total Price:</strong> ₹{{ booking.total_price }}<br>
+                            <strong>Total Km:</strong> {{ booking.total_km }} km
+                        </p>
+
+                        <!-- Booking Status -->
+                        <p class="mb-1">
+                            <strong>Booking Status:</strong>
+                            {% if booking.status == "Pending" %}
+                                <span class="badge bg-warning text-dark">{{ booking.status }}</span>
+                            {% elif booking.status == "Confirmed" %}
+                                <span class="badge bg-success">{{ booking.status }}</span>
+                            {% elif booking.status == "Ongoing" %}
+                                <span class="badge bg-info text-dark">{{ booking.status }}</span>
+                            {% elif booking.status == "Completed" %}
+                                <span class="badge bg-secondary">{{ booking.status }}</span>
+                            {% elif booking.status == "Cancelled" %}
+                                <span class="badge bg-danger">{{ booking.status }}</span>
+                            {% endif %}
+                        </p>
+
+                        <!-- Payment Status -->
+                        <p class="mb-3">
+                            <strong>Payment Status:</strong>
+                            {% if booking.payment_status == "Pending" %}
+                                <span class="badge bg-warning text-dark">{{ booking.payment_status }}</span>
+                            {% elif booking.payment_status == "Paid" %}
+                                <span class="badge bg-success">{{ booking.payment_status }}</span>
+                            {% endif %}
+                        </p>
+
+                        <!-- Cancel / Pay Now Buttons -->
+                        <div class="d-flex flex-column gap-2">
+                            {% if not booking.is_cancelled %}
+                                {% if booking.can_cancel %}
+                                    <form method="post" action="{% url 'bookings:cancel_booking' booking.id %}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-danger btn-sm w-100">Cancel Booking</button>
+                                    </form>
+                                {% else %}
+                                    <button class="btn btn-secondary btn-sm w-100" disabled>Cannot Cancel (24h Passed)</button>
+                                {% endif %}
+
+                                {% if booking.payment_status == "Pending" %}
+                                    <a href="{% url 'bookings:payment_method' booking.id %}" class="btn btn-primary btn-sm w-100">Pay Now</a>
+                                {% endif %}
+<a href="{% url 'bookings:booking_confirm' booking.id %}" class="btn btn-primary">View My Invoice</a>
+  
+                            {% else %}
+                                <span class="badge bg-danger w-100 text-center">Cancelled</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">No bookings yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

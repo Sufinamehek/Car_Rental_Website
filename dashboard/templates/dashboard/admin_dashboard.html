@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-primary">Admin Dashboard</h2>
+
+    <!-- Stats Cards -->
+    <div class="row g-4">
+        <div class="col-md-3 col-6">
+            <div class="card shadow-sm text-center p-3">
+                <h5>Total Cars</h5>
+                <h3>{{ total_cars }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card shadow-sm text-center p-3">
+                <h5>Total Bookings</h5>
+                <h3>{{ total_bookings }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card shadow-sm text-center p-3">
+                <h5>Pending Bookings</h5>
+                <h3>{{ pending_bookings }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card shadow-sm text-center p-3">
+                <h5>Completed Bookings</h5>
+                <h3>{{ completed_bookings }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Table -->
+    <div class="mt-5">
+        <h4 class="mb-3">Recent Bookings</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>User</th>
+                        <th>Car</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Booked On</th>
+                        <th>Fare</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.user.username }}</td>
+                        <td>{{ booking.car.name }}</td>
+                        <td>
+                            {{ booking.start_date }}<br>
+                            <small>{{ booking.start_time }}</small>
+                        </td>
+                        <td>
+                            {{ booking.end_date }}<br>
+                            <small>{{ booking.end_time }}</small>
+                        </td>
+                        <td>{{ booking.created_at|date:"d M Y, h:i A" }}</td>
+                        <td>₹ {{ booking.total_price }}</td>
+                        <td>
+                            {% if booking.payment_status == "Pending" %}
+                                <span class="badge bg-warning">Pending</span>
+                            {% else %}
+                                <span class="badge bg-success">Paid</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge 
+                                {% if booking.status == 'Pending' %} bg-warning
+                                {% elif booking.status == 'Confirmed' %} bg-info
+                                {% elif booking.status == 'Ongoing' %} bg-primary
+                                {% elif booking.status == 'Completed' %} bg-success
+                                {% elif booking.status == 'Cancelled' %} bg-danger
+                                {% endif %}">
+                                {{ booking.status }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if booking.status == "Pending" %}
+                                <a href="{% url 'bookings:payment_method' booking.id %}" class="btn btn-sm btn-warning mb-1">Mark Paid / Pay</a>
+                            {% endif %}
+
+                            {% if booking.status == "Confirmed" %}
+                                <a href="{% url 'bookings:ride_start' booking.id %}" class="btn btn-sm btn-primary mb-1">Start Ride</a>
+                            {% elif booking.status == "Ongoing" %}
+                                <a href="{% url 'bookings:ride_end' booking.id %}" class="btn btn-sm btn-success mb-1">End Ride</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9" class="text-center">No bookings found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Admin Links -->
+    <div class="mt-4">
+        <h4>Manage Cars</h4>
+        <a href="{% url 'admin:cars_car_changelist' %}" class="btn btn-primary mb-2">View Cars</a>
+
+        <h4>Manage Bookings</h4>
+        <a href="{% url 'admin:bookings_booking_changelist' %}" class="btn btn-primary">View Bookings</a>
+    </div>
+</div>
+{% endblock %}

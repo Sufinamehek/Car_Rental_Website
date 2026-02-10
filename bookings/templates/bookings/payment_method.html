@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h3>Payment for {{ booking.car.name }}</h3>
+    <p>Total Amount: ₹ {{ booking.total_price }}</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="payment_option" value="COD" id="cod">
+            <label class="form-check-label" for="cod">Cash on Delivery (COD)</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="payment_option" value="Online" id="online">
+            <label class="form-check-label" for="online">Online Payment</label>
+        </div>
+        <button type="submit" class="btn btn-success mt-3">Pay & Confirm</button>
+    </form>
+</div>
+{% endblock %}

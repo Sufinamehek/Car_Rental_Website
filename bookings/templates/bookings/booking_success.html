@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Booking Successful ✅</h2>
+    <p>Your car booking has been confirmed.</p>
+    <a href="{% url 'bookings_index' %}" class="btn btn-primary">View My Bookings</a>
+</div>
+{% endblock %}

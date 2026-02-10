@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Hero Section -->
+
+    <div class=" text-center "> 
+
+        <p class="hero-subtitle">EXCLUSIVE COLLECTION</p>
+
+        <h1 class="hero-title">
+            Available <span>Cars</span>
+        </h1>
+
+        <p class="hero-text">
+            Discover our curated fleet of the world's most prestigious automobiles.
+            Each vehicle meticulously maintained for the ultimate driving experience.
+        </p>
+
+        <!-- Info Boxes -->
+        <div class="container mt-5">
+            <div class="row g-4 justify-content-center">
+
+                <div class="col-md-3 col-6">
+                    <div class="info-box">
+                        <h5>50+</h5>
+                        <p>Premium Cars</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="info-box">
+                        <h5>100%</h5>
+                        <p>Fully Insured</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="info-box">
+                        <h5>Always</h5>
+                        <p>24/7 Support</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="info-box">
+                        <h5>4.9</h5>
+                        <p>Client Rating</p>
+                    </div>
+                </div>
+
+            </div>
+             </div>
+
+
+    </div>
+
+
+<div class="container mt-5">
+    <div class="row">
+        {% for car in cars %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="car-card">
+
+                <!-- Car Image -->
+                <div class="car-image-wrapper">
+                    
+                    <img src="{{ car.image.url }}" alt="{{ car.name }}" class="car-img">
+
+                    {% if car.is_available %}
+                        <span class="status-badge available">Available</span>
+                    {% else %}
+                        <span class="status-badge not-available">Not Available</span>
+                    {% endif %}
+                </div>
+
+                <!-- Car Info -->
+                <div class="car-info">
+                    <h6 class="car-brand">{{ car.car_type }}</h6>
+                    <h4 class="car-name">{{ car.name }}</h4>
+
+                    <div class="car-details">
+                        <span>Seats: {{ car.seats }}</span>
+                        <span>₹{{ car.price_per_day }} /day</span>
+                        <span>₹{{ car.fare_per_km }} /km</span>
+                    </div>
+
+                    <a href="{% url 'bookings:book_car' car.id %}" class="btn-book">
+                        Book Now
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center text-muted">No cars available</p>
+        {% endfor %}
+    </div>
+</div>
+
+
+<style>
+    /* Car Card */
+.car-card {
+    background: #000;
+    border-radius: 14px;
+    overflow: hidden;
+    transition: 0.3s;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.car-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+}
+
+/* Image */
+.car-image-wrapper {
+    position: relative;
+}
+
+.car-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+/* Badge */
+.status-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 20px;
+}
+
+.available {
+    background: #198754;
+    color: white;
+}
+
+.not-available {
+    background: #dc3545;
+    color: white;
+}
+
+/* Info */
+.car-info {
+    padding: 20px;
+    color: white;
+}
+
+.car-brand {
+    color: #d4af37;
+    letter-spacing: 1px;
+    font-size: 13px;
+}
+
+.car-name {
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+/* Details */
+.car-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #bbb;
+    margin-bottom: 15px;
+}
+
+/* Button */
+.btn-book {
+    display: block;
+    text-align: center;
+    background: #d4af37;
+    color: black;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-book:hover {
+    background: #b8962e;
+    color: black;
+}
+
+/* .hero-section {
+    background: url("{% static 'image/image.png' %}") center/cover no-repeat;
+    height: 520px;
+    position: relative;
+} */
+
+.hero-overlay {
+    
+    min-height: 600px;
+
+    /* Center content */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  /* vertical center */
+    align-items: center;      /* horizontal center */
+    text-align: center;
+
+    padding: 20px;
+    color: white;
+}
+
+.hero-subtitle {
+    color: #d4af37;
+    letter-spacing: 3px;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center ;
+}
+
+.hero-title span {
+    color: #d4af37;
+}
+
+.hero-text {
+    max-width: 650px;
+    margin: 15px auto;
+    color: #ccc;
+}
+
+.info-box {
+    background: rgba(20,20,20,0.8);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.info-box h5 {
+    color: #d4af37;
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+.info-box p {
+    color: #aaa;
+    font-size: 14px;
+}
+
+
+</style>
+{% endblock %}
